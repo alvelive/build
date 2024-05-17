@@ -47,14 +47,11 @@ jobs:
       - name: Test Custom Docker Build and Push
         uses: alvelive/build@v1
         with:
-          repo: ${{ github.repository }}
-          branch: ${{ github.ref }}
+          repo: ${{ github.event.repository.name }}
+          branch: ${{ env.branch }}
           commit-hash: ${{ github.sha }}
-          docker-username: ${{ secrets.ALVE_ORG_DOCKER_USERNAME }}
           docker-password: ${{ secrets.ALVE_ORG_DOCKER_PASSWORD }}
-          env-file: .example.env
+          docker-username: ${{ secrets.ALVE_ORG_DOCKER_USERNAME }}
+          env-file: ${{ secrets.DEV_ENV_FILE }}
+          npmrc: ${{ format(secrets.ALVE_ORG_NPMRC_TEMPLATE, secrets.GITHUB_TOKEN) }}
           push: true
-          github-username: ${{ secrets.GITHUB_USERNAME }}
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          npmrc: ${{ secrets.ALVE_ORG_NPMRC_TEMPLATE }}
-          context: '.'
