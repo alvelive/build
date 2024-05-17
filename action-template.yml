@@ -76,13 +76,12 @@ runs:
         DOCKER_BUILDKIT: 1
       with:
         context: ${{ inputs.context }}
-        file: ./Dockerfile
+        target: ${{ inputs.target }}
         push: ${{ inputs.push }}
         tags: ${{ env.tagged-image-name }}
         cache-from: type=registry,ref=${{ env.image-name }}:buildcache
         cache-to: type=registry,ref=${{ env.image-name }}:buildcache,mode=max
         builder: ${{ steps.setup-buildx.outputs.name }}
-        target: ${{ inputs.target }}
         secrets: |
           "github_username=${{ inputs.github-username }}"
           "github_token=${{ inputs.github-token }}"
