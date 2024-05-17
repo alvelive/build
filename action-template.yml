@@ -37,6 +37,9 @@ inputs:
     description: 'Path to the build context'
     required: false
     default: '.'
+  target:
+    description: 'Build target'
+    required: false
 
 runs:
   using: 'composite'
@@ -79,6 +82,7 @@ runs:
         cache-from: type=registry,ref=${{ env.image-name }}:buildcache
         cache-to: type=registry,ref=${{ env.image-name }}:buildcache,mode=max
         builder: ${{ steps.setup-buildx.outputs.name }}
+        target: ${{ inputs.target }}
         secrets: |
           "github_username=${{ inputs.github-username }}"
           "github_token=${{ inputs.github-token }}"
