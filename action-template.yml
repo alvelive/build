@@ -6,10 +6,11 @@ inputs:
     required: true
   branch:
     description: 'Branch name will be prefixed to image name as branch_repo_name:commit_hash'
-    required: true
+    required: false
   commit-hash:
     description: 'Commit hash'
-    required: true
+    required: false
+    default: 'latest'
   docker-username:
     description: 'Docker Hub username'
     required: true

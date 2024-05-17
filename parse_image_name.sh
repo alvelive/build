@@ -31,7 +31,7 @@ lowercase() {
 
 main() {
   # GITHUB_BRANCH is optional
-  check_env_vars DOCKER_USERNAME GITHUB_REPO GITHUB_SHA
+  check_env_vars DOCKER_USERNAME GITHUB_REPO
 
   local image_name="$DOCKER_USERNAME/"
   local using_latest_tag=0
