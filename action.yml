@@ -46,25 +46,33 @@ runs:
     - name: Set Docker Image Name
       id: set-image-name
       run: |
-        DOCKER_IMAGE_NAME="${{ inputs.docker-username }}/"
+        lowercase() {
+          tr '[:upper:]' '[:lower:]'
+        }
+
+        IMAGE_NAME="${{ inputs.docker-username }}/"
 
         if [ -n "${{ inputs.branch }}" ]; then
-          DOCKER_IMAGE_NAME="$DOCKER_IMAGE_NAME${{ inputs.branch }}_"
+          IMAGE_NAME="$IMAGE_NAME${{ inputs.branch }}_"
         fi
 
         if [ -n "${{ inputs.repo }}" ]; then
-          DOCKER_IMAGE_NAME="$DOCKER_IMAGE_NAME${{ inputs.repo }}"
+          IMAGE_NAME="$IMAGE_NAME${{ inputs.repo }}"
         fi
+
+        read -r IMAGE_NAME <<<"$(echo "$IMAGE_NAME" | lowercase"
+
+        echo "image-name=$IMAGE_NAME" >> $GITHUB_ENV
 
         if [ -n "${{ inputs.commit-hash }}" ]; then
-          DOCKER_IMAGE_NAME="$DOCKER_IMAGE_NAME:${{ inputs.commit-hash }}"
+          IMAGE_NAME="$IMAGE_NAME:${{ inputs.commit-hash }}"
         else
-          DOCKER_IMAGE_NAME="$DOCKER_IMAGE_NAME:latest"
+          IMAGE_NAME="$IMAGE_NAME:latest"
         fi
 
-        DOCKER_IMAGE_NAME=$(echo $DOCKER_IMAGE_NAME | tr '[:upper:]' '[:lower:]')
+        read -r IMAGE_NAME <<<"$(echo "$IMAGE_NAME" | lowercase"
 
-        echo "::set-output name=image-name::$DOCKER_IMAGE_NAME"
+        echo "tagged-image-name=$IMAGE_NAME" >> $GITHUB_ENV
       shell: bash
 
     - name: Log in to Docker Hub
@@ -87,9 +95,9 @@ runs:
         context: ${{ inputs.context }}
         file: ./Dockerfile
         push: ${{ inputs.push }}
-        tags: ${{ steps.set-image-name.outputs.image-name }}
-        cache-from: type=registry,ref=${{ inputs.docker-username }}/${{ inputs.repo }}:buildcache
-        cache-to: type=registry,ref=${{ inputs.docker-username }}/${{ inputs.repo }}:buildcache,mode=max
+        tags: ${{ env.tagged-image-name }}
+        cache-from: type=registry,ref=${{ env.image-name }}:buildcache
+        cache-to: type=registry,ref=${{ env.image-name }}:buildcache,mode=max
         builder: ${{ steps.setup-buildx.outputs.name }}
         secrets: |
           "github_username=${{ inputs.github-username }}"
