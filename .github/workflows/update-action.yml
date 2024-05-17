@@ -1,0 +1,57 @@
+name: Update Action
+
+on:
+  push:
+    paths:
+      - .github/workflows/update-action.yml
+      - action-template.yml
+      - parse-image-name.sh
+
+permissions:
+  contents: write
+
+jobs:
+  update-action:
+    runs-on: ubuntu-latest
+    env:
+      SCRIPT_FILE: 'parse_image_name.sh'
+      INPUT_FILE: 'action-template.yml'
+      OUTPUT_FILE: 'action.yml'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Prepare README.md
+        run: |
+          INSTALL_URL="https://raw.githubusercontent.com/${{ github.repository }}/${{ github.sha }}/${{ env.SCRIPT_FILE }}"
+          sed "s|{{parse_image_name}}|$INSTALL_URL|g" ${{ env.INPUT_FILE }} > ${{ env.OUTPUT_FILE }}
+
+      - name: Commit and push README.md
+        run: |
+          git config --global user.name 'GitHub Action'
+          git config --global user.email 'action@github.com'
+          git add ${{ env.OUTPUT_FILE }}
+          git commit -m "Update ${{ env.OUTPUT_FILE }} to reflect new release"
+          git push
+
+  test:
+    runs-on: ubuntu-latest
+    needs: update-action
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Test Custom Docker Build and Push
+        uses: ./
+        with:
+          repo: ${{ github.repository }}
+          branch: ${{ github.ref }}
+          commit-hash: ${{ github.sha }}
+          docker-username: ${{ secrets.ALVE_ORG_DOCKER_USERNAME }}
+          docker-password: ${{ secrets.ALVE_ORG_DOCKER_PASSWORD }}
+          env-file: .example.env
+          push: true
+          github-username: ${{ secrets.GITHUB_USERNAME }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          npmrc: ${{ secrets.ALVE_ORG_NPMRC_TEMPLATE }}
+          context: '.'

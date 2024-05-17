@@ -45,8 +45,14 @@ runs:
 
     - name: Set Docker Image Name
       id: set-image-name
-      run: curl -fsSL {{ script_url }} | bash
       shell: bash
+      run: |
+        export DOCKER_USERNAME="${{ inputs.docker-username }}"
+        export GITHUB_REPO="${{ inputs.repo }}"
+        export GITHUB_BRANCH="${{ inputs.branch }}"
+        export GITHUB_SHA="${{ inputs.commit-hash }}"
+
+        curl -o- {{install_url}} | bash
 
     - name: Log in to Docker Hub
       uses: docker/login-action@v3
