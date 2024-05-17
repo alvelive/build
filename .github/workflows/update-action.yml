@@ -3,6 +3,7 @@ name: Update Action
 on: ['push', 'pull_request']
 
 permissions:
+  packages: read
   contents: write
 
 concurrency:
