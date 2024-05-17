@@ -11,6 +11,7 @@ concurrency:
 
 jobs:
   update-action:
+    name: Update Action file with new script url
     runs-on: ubuntu-latest
     env:
       SCRIPT_FILE: 'parse_image_name.sh'
@@ -34,8 +35,11 @@ jobs:
           git push
 
   test:
+    name: Test Custom Docker Build and Push
     runs-on: ubuntu-latest
     needs: update-action
+    env:
+      branch: ${{ github.head_ref || github.ref_name }}
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
@@ -44,8 +48,9 @@ jobs:
         uses: alvelive/build@v1
         with:
           repo: ${{ github.event.repository.name }}
-          branch: ${{ env.branch }}
-          commit-hash: ${{ github.sha }}
+          # branch: ${{ env.branch }}
+          # Empty commit hash will evaluate to "latest"
+          # commit-hash: latest
           docker-password: ${{ secrets.ALVE_ORG_DOCKER_PASSWORD }}
           docker-username: ${{ secrets.ALVE_ORG_DOCKER_USERNAME }}
           env-file: ${{ secrets.DEV_ENV_FILE }}
