@@ -5,7 +5,7 @@ on:
     paths:
       - .github/workflows/update-action.yml
       - action-template.yml
-      - parse-image-name.sh
+      - parse_image_name.sh
 
 permissions:
   contents: write
