@@ -10,7 +10,6 @@
   "dependencies": {},
   "devDependencies": {
     "husky": "^9.0.11",
-    "precommit": "lint-staged",
     "prettier": "^3.2.5",
     "prettier-plugin-packagejson": "^2.5.0"
   },
