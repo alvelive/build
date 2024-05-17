@@ -75,6 +75,7 @@ runs:
       env:
         DOCKER_BUILDKIT: 1
       with:
+        file: ${{ inputs.context }}/Dockerfile
         context: ${{ inputs.context }}
         target: ${{ inputs.target }}
         push: ${{ inputs.push }}
