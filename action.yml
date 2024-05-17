@@ -1,44 +1,44 @@
-name: "Custom Docker Build and Push"
-description: "Build and push Docker images with caching"
+name: 'Custom Docker Build and Push'
+description: 'Build and push Docker images with caching'
 inputs:
   repo:
-    description: "Repository name"
+    description: 'Repository name will be suffixed to image name as branch_repo_name:commit_hash'
     required: true
   branch:
-    description: "Branch name"
+    description: 'Branch name will be prefixed to image name as branch_repo_name:commit_hash'
     required: true
   commit-hash:
-    description: "Commit hash"
+    description: 'Commit hash'
     required: true
   docker-username:
-    description: "Docker Hub username"
+    description: 'Docker Hub username'
     required: true
   docker-password:
-    description: "Docker Hub password"
+    description: 'Docker Hub password'
     required: true
   env-file:
-    description: ".env file contents"
+    description: '.env file contents'
     required: false
   push:
-    description: "Should it push image to docker"
+    description: 'Should it push image to docker'
     required: false
     default: true
   github-username:
-    description: "GitHub username, will be provided as a secret named github_username"
+    description: 'GitHub username, will be provided as a secret named github_username'
     required: false
   github-token:
-    description: "GitHub Personal Access Token, will be provided as a secret named github_pat"
+    description: 'GitHub Personal Access Token, will be provided as a secret named github_pat'
     required: false
   npmrc:
-    description: "~/.npmrc file to use for private registries, will be provided as a secret named npmrc"
+    description: '~/.npmrc file to use for private registries, will be provided as a secret named npmrc'
     required: false
   context:
-    description: "Path to the build context"
+    description: 'Path to the build context'
     required: false
-    default: "."
+    default: '.'
 
 runs:
-  using: "composite"
+  using: 'composite'
   steps:
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v3
@@ -46,8 +46,24 @@ runs:
     - name: Set Docker Image Name
       id: set-image-name
       run: |
-        DOCKER_IMAGE_NAME="${{ inputs.docker-username }}/${{ inputs.branch }}_${{ inputs.repo }}:${{ inputs.commit-hash }}"
+        DOCKER_IMAGE_NAME="${{ inputs.docker-username }}/"
+
+        if [ -n "${{ inputs.branch }}" ]; then
+          DOCKER_IMAGE_NAME="$DOCKER_IMAGE_NAME${{ inputs.branch }}_"
+        fi
+
+        if [ -n "${{ inputs.repo }}" ]; then
+          DOCKER_IMAGE_NAME="$DOCKER_IMAGE_NAME${{ inputs.repo }}"
+        fi
+
+        if [ -n "${{ inputs.commit-hash }}" ]; then
+          DOCKER_IMAGE_NAME="$DOCKER_IMAGE_NAME:${{ inputs.commit-hash }}"
+        else
+          DOCKER_IMAGE_NAME="$DOCKER_IMAGE_NAME:latest"
+        fi
+
         DOCKER_IMAGE_NAME=$(echo $DOCKER_IMAGE_NAME | tr '[:upper:]' '[:lower:]')
+
         echo "::set-output name=image-name::$DOCKER_IMAGE_NAME"
       shell: bash
 

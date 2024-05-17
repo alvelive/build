@@ -1,6 +1,8 @@
 # Alve Build Apps Action
 
-This GitHub Action automates the process of building and pushing Docker images with caching, utilizing the dynamic generation of Docker image names based on repository, branch, and commit hash.
+This GitHub Action automates the process of building and pushing Docker images
+with caching, utilizing the dynamic generation of Docker image names based on
+repository, branch, and commit hash.
 
 ## Usage
 
@@ -29,7 +31,8 @@ jobs:
 
 ## Outputs
 
-- `docker-image-name`: The full name of the Docker image that was built and pushed.
+- `docker-image-name`: The full name of the Docker image that was built and
+  pushed.
 
 ## Example Workflow
 

@@ -1,0 +1,26 @@
+name: Test Custom Docker Build and Push Action
+
+on: [push, pull_request]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Test Custom Docker Build and Push
+        uses: ./
+        with:
+          repo: ${{ github.repository }}
+          branch: ${{ github.ref }}
+          commit-hash: ${{ github.sha }}
+          docker-username: ${{ secrets.ALVE_ORG_DOCKER_USERNAME }}
+          docker-password: ${{ secrets.ALVE_ORG_DOCKER_PASSWORD }}
+          env-file: .example.env
+          push: true
+          github-username: ${{ secrets.GITHUB_USERNAME }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          npmrc: ${{ secrets.ALVE_ORG_NPMRC_TEMPLATE }}
+          context: '.'
