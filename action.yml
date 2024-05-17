@@ -6,10 +6,11 @@ inputs:
     required: true
   branch:
     description: 'Branch name will be prefixed to image name as branch_repo_name:commit_hash'
-    required: true
+    required: false
   commit-hash:
     description: 'Commit hash'
-    required: true
+    required: false
+    default: 'latest'
   docker-username:
     description: 'Docker Hub username'
     required: true
@@ -52,7 +53,7 @@ runs:
         export GITHUB_BRANCH="${{ inputs.branch }}"
         export GITHUB_SHA="${{ inputs.commit-hash }}"
 
-        curl -o- https://raw.githubusercontent.com/alvelive/build/0e9fc020b8c2cfa3065e346034a4d7f3d7c8222e/parse_image_name.sh | bash
+        curl -o- https://raw.githubusercontent.com/alvelive/build/e2a5bc85af8310fe9af4cee9dc2f73680e25cb47/parse_image_name.sh | bash
 
     - name: Log in to Docker Hub
       uses: docker/login-action@v3
