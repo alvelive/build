@@ -1,11 +1,6 @@
 name: Update Action
 
-on:
-  push:
-    paths:
-      - .github/workflows/update-action.yml
-      - action-template.yml
-      - parse_image_name.sh
+on: ['push', 'pull_request']
 
 permissions:
   contents: write
