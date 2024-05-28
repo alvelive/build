@@ -31,7 +31,10 @@ inputs:
     description: 'GitHub Personal Access Token, will be provided as a secret named github_pat'
     required: false
   npmrc:
-    description: '~/.npmrc file to use for private registries, will be provided as a secret named npmrc'
+    description: '.npmrc file to use for private registries, will be provided as a secret named npmrc'
+    required: false
+  bunfig:
+    description: 'bunfig.toml file to use for private registries, will be provided as a secret named bunfig'
     required: false
   context:
     description: 'Path to the build context'
@@ -56,7 +59,7 @@ runs:
         export GITHUB_BRANCH="${{ inputs.branch }}"
         export GITHUB_SHA="${{ inputs.commit-hash }}"
 
-        curl -o- https://raw.githubusercontent.com/alvelive/build/011d1c4a360561c7484574ce8ee623dfe299d849/parse_image_name.sh | bash
+        curl -o- https://raw.githubusercontent.com/alvelive/build/ecea5c2e010ade57368d73ca02b53a3cb253fcd7/parse_image_name.sh | bash
 
     - name: Log in to Docker Hub
       uses: docker/login-action@v3
@@ -87,3 +90,4 @@ runs:
           "github_username=${{ inputs.github-username }}"
           "github_token=${{ inputs.github-token }}"
           "npmrc=${{ inputs.npmrc }}"
+          "bunfig=${{ inputs.bunfig }}"
