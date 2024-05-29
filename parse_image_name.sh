@@ -64,7 +64,7 @@ main() {
 
   echo "tagged-image-name=$image_name" >>$GITHUB_ENV
 
-  if [ -n "$using_latest_tag" ]; then
+  if [ $using_latest_tag -eq 0 ]; then
     echo "Successfully parsed image name using latest tag"
   else
     echo "Successfully parsed image name"
