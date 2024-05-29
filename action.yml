@@ -57,7 +57,7 @@ runs:
         GITHUB_BRANCH: '${{ inputs.branch }}'
         GITHUB_REPO: '${{ inputs.repo }}'
         GITHUB_SHA: '${{ inputs.commit-hash }}'
-      run: curl -o- https://raw.githubusercontent.com/alvelive/build/598e9682e4f62a1210580e361c79101784f46e22/parse_image_name.sh | bash
+      run: curl -o- https://raw.githubusercontent.com/alvelive/build/4bc89b3756bd71b694577a1f248ffbe46657f973/parse_image_name.sh | bash
 
     - name: Log in to Docker Hub
       uses: docker/login-action@v3
@@ -78,7 +78,7 @@ runs:
         GITHUB_TOKEN: ${{ inputs.github-token }}
         GITHUB_USERNAME: ${{ inputs.github-username }}
         NPMRC: ${{ inputs.npmrc }}
-      run: curl -o- https://raw.githubusercontent.com/alvelive/build/598e9682e4f62a1210580e361c79101784f46e22/parse_secrets.sh | bash
+      run: curl -o- https://raw.githubusercontent.com/alvelive/build/4bc89b3756bd71b694577a1f248ffbe46657f973/parse_secrets.sh | bash
 
     - name: Build and Push Docker Image
       uses: docker/build-push-action@v5
