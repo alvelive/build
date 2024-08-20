@@ -41,6 +41,10 @@ main() {
   fi
 
   if [ -n "$GITHUB_REPO" ]; then
+    if [ "$GITHUB_REPO" = */* ]; then
+      GITHUB_REPO="$(echo "$GITHUB_REPO" | sed 's|.*/||')"
+    fi
+
     image_name="$image_name$GITHUB_REPO"
     echo "Repository name is parsed"
   else
