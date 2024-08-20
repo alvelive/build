@@ -1,3 +1,4 @@
+#!/bin/bash
 set -e
 
 err() {
@@ -41,7 +42,7 @@ main() {
   fi
 
   if [ -n "$GITHUB_REPO" ]; then
-    if [ "$GITHUB_REPO" = */* ]; then
+    if [[ "$GITHUB_REPO" = *"/"* ]]; then
       echo "Omitting the owner name from the repository name"
       GITHUB_REPO="$(echo "$GITHUB_REPO" | sed 's|.*/||')"
     fi
